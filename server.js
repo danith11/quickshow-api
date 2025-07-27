@@ -1,17 +1,24 @@
 import express from "express";
 import cors from "cors";
 import "dotenv/config";
+import { clerkMiddleware } from "@clerk/express";
+import { serve } from "inngest/express";
+import { inngest, functions } from "./inngest/index.js"
+import connectDB from "./configs/db.js";
 
 const app = express();
 const port = 3000;
 
-//Middleware
+await connectDB();
 
+//Middleware
 app.use(express.json());
 app.use(cors());
+app.use(clerkMiddleware());
 
 // API Routes
 app.get("/", (req, res) => res.send("Server is live!!!"));
+app.use("/api/inngest", serve({ client: inngest, functions }));
 
 app.listen(port, () =>
   console.log(`Server is listing at http://localhost:${port}`)
