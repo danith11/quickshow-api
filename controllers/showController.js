@@ -1,5 +1,6 @@
 import axios from "axios";
 import Movie from "../models/Movie.js";
+import Show from "../models/Show.js";
 
 //API to get now playing movies from TMDB API
 export const getNowPlayingMovies = async (req, res) => {
@@ -56,6 +57,26 @@ export const addShow = async (req, res) => {
 
       movie = await Movie.create(movieDetails);
     }
+
+    const showsToCreate = [];
+    showsInput.forEach((show) => {
+      const showDate = show.date;
+      show.time.forEach((time) => {
+        const dateTimeString = `${showDate}T${time}`;
+        showsToCreate.push({
+          movie: movieId,
+          showDateTime: new Date(dateTimeString),
+          showPrice,
+          occupiedSeats: {},
+        });
+      });
+    });
+
+    if (showsToCreate.length > 0) {
+      await Show.insertMany(showsToCreate);
+    }
+
+    res.json({ success: true, message: "Show Added Succesfully" });
   } catch (error) {
     console.log(error);
     res.json({ success: false, message: error.message });
