@@ -82,3 +82,18 @@ export const addShow = async (req, res) => {
     res.json({ success: false, message: error.message });
   }
 };
+
+// API to get all shows from database
+export const getShows = async (req, res) => {
+  try {
+    const shows = await Show.find({ showDateTime: { $gte: new Date() } })
+      .populate("movie")
+      .sort({ showDateTime: 1 });
+
+    const uniqueShows = new Set(shows.map((show) => show.movie));
+    res.json({ success: true, shows: Array.from(uniqueShows) });
+  } catch (error) {
+    console.log(error);
+    res.json({ success: false, message: error.message });
+  }
+};
