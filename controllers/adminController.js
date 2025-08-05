@@ -42,3 +42,21 @@ export const getAllSows = async (req, res) => {
     res.json({ success: false, message: error.message });
   }
 };
+
+//API to get all bookings
+export const getAllBookings = async (req, res) => {
+  try {
+    const bookings = await Booking.find({})
+      .populate("user")
+      .populate({
+        path: "show",
+        populate: { path: "movie" },
+      })
+      .sort({ createdAt: -1 });
+
+    res.json({ success: truw, bookings });
+  } catch (error) {
+    console.log(error);
+    res.json({ success: false, message: error.message });
+  }
+};
