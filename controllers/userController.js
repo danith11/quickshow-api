@@ -1,5 +1,6 @@
 import Booking from "../models/Booking.js";
 import { clerkClient } from "@clerk/express";
+import Movie from "../models/Movie.js";
 
 // API controller to get user bookings
 export const getUserBookings = async (req, res) => {
@@ -41,6 +42,21 @@ export const updateFavorite = async (req, res) => {
     });
 
     res.json({ success: true, message: "Favorite movies updated" });
+  } catch (error) {
+    console.error(error.message);
+    res.json({ success: false, message: error.message });
+  }
+};
+
+//API to get favorite movies
+export const getFavorite = async (req, res) => {
+  try {
+    const user = await clerkClient.users.getUser(req.auth().userId);
+    const getUser = user.privateMetadata.favorites;
+
+    // get movies from database
+    const movies = await Movie.find({ _id: { $in: favorites } });
+    res.json({success:true,movies})
   } catch (error) {
     console.error(error.message);
     res.json({ success: false, message: error.message });
