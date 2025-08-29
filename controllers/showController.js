@@ -120,7 +120,7 @@ export const getShow = async (req, res) => {
 
     const dateTime = {};
 
-    showws.forEach((show) => {
+    shows.forEach((show) => {
       const date = show.showDateTime.toISOString().split("T")[0];
       if (!dateTime[date]) {
         dateTime[date] = [];
