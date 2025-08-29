@@ -1,5 +1,4 @@
 import express from "express";
-import bookingRouter from "./bookingRoutes";
 import {
   getFavorite,
   getUserBookings,

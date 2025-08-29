@@ -5,6 +5,13 @@ import Show from "../models/Show.js";
 //API to get now playing movies from TMDB API
 export const getNowPlayingMovies = async (req, res) => {
   try {
+    // const { data } = await axios.get(
+    //   "https://api.themoviedb.org/3/movie/now_playing",
+    //   {
+    //     headers: { Authorization: `Bearer ${process.env.TMDB_API_KEY}` },
+    //   }
+    // );
+
     const { data } = await axios.get(
       "https://api.themoviedb.org/3/movie/now_playing",
       {
@@ -19,7 +26,7 @@ export const getNowPlayingMovies = async (req, res) => {
     res.json({ success: false, message: error.message });
   }
 };
-
+  
 // API to add a new show to the database
 export const addShow = async (req, res) => {
   try {
@@ -41,6 +48,7 @@ export const addShow = async (req, res) => {
       const movieCreditsData = movieCreditsResponse.data;
 
       const movieDetails = {
+        // tmdbId: movieId,
         _id: movieId,
         title: movieApiData.title,
         overview: movieApiData.overview,
