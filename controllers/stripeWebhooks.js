@@ -18,24 +18,25 @@ export const stripeWebhooks = async (request, response) => {
 
   try {
     switch (event.type) {
-      case "payment_intent.succeeded":
-        {
-          const paymentIntent = event.data.object;
-          const sessionList = await stripeInstance.checkout.sessions.list({
-            payment_intent: paymentIntent.id,
-          });
-          const session = sessionList.data[0];
-          const { bookingId } = session.metadata;
-          await Booking.findByIdAndUpdate(bookingId, {
-            isPaid: true,
-            paymentLink: "",
-          });
-        }
-
+      case "payment_intent.succeeded": {
+        const paymentIntent = event.data.object;
+        const sessionList = await stripeInstance.checkout.sessions.list({
+          payment_intent: paymentIntent.id,
+        });
+        const session = sessionList.data[0];
+        const { bookingId } = session.metadata;
+        await Booking.findByIdAndUpdate(bookingId, {
+          isPaid: true,
+          paymentLink: "",
+        });
         break;
-
+      }
       default:
-        break;
+        console.log("Unhandled Event Type: ", event.type);
     }
-  } catch (error) {}
+    response.json({ received: true });
+  } catch (err) {
+    console.log("Webhook processing error : ", err);
+    response.status(500).send("Internal Server Error");
+  }
 };
